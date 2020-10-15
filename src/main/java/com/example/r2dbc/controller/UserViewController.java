@@ -19,7 +19,7 @@ public class UserViewController {
 
     @GetMapping("/")
     public String index(Model model) {
-        IReactiveDataDriverContextVariable userDataDrivenMode = new ReactiveDataDriverContextVariable(userService.findAll().delayElements(Duration.ofMillis(10)), 1);
+        IReactiveDataDriverContextVariable userDataDrivenMode = new ReactiveDataDriverContextVariable(userService.findAll(), 1);
 
         model.addAttribute("users", userDataDrivenMode);
 

@@ -23,11 +23,20 @@ public class UserService {
 
     @PostConstruct
     public void generate() {
-        this.generateSampleUser()
-                .buffer(50)
-                .flatMap(users -> addUsers(Flux.fromIterable(users)).subscribeOn(Schedulers.elastic()))
-                //.limitRequest(100)
-                .subscribe();
+        this.count()
+        .filter(count -> count < 10_000)
+        .map(count -> this.generateSampleUser()
+                    .buffer(100)
+                    .flatMap(users -> addUsers(Flux.fromIterable(users)).subscribeOn(Schedulers.elastic()))
+                    .limitRequest(10_000)
+                    .subscribe()
+        )
+        .subscribe();
+
+    }
+
+    public Mono<Long> count() {
+        return userRepository.count();
     }
 
     public Flux<User> findAll() {
