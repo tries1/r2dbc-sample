@@ -3,17 +3,12 @@ package com.example.r2dbc.service;
 import com.example.r2dbc.model.User;
 import com.example.r2dbc.repository.UserRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.stream.IntStream;
 
 import javax.annotation.PostConstruct;
 
-import io.r2dbc.spi.ConnectionFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
@@ -25,17 +20,12 @@ import reactor.core.scheduler.Schedulers;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final ConnectionFactory connectionFactory;
 
-    //@PostConstruct
+    @PostConstruct
     public void generate() {
         this.generateSampleUser()
-                .buffer(10)
-                .flatMap(users ->
-                        Flux.fromIterable(users)
-                                .map(user -> addUser(user).subscribe())
-                                .subscribeOn(Schedulers.parallel())
-                )
+                .buffer(50)
+                .flatMap(users -> addUsers(Flux.fromIterable(users)).subscribeOn(Schedulers.elastic()))
                 //.limitRequest(100)
                 .subscribe();
     }
@@ -49,6 +39,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public Flux<User> addUsers(Flux<User> users) {
+        log.info("{}", users);
+        return userRepository.saveAll(users);
+    }
+
     public Mono<Void> deleteUser(Long id) {
         log.info("{}", id);
         return userRepository.deleteById(id);
@@ -56,7 +51,6 @@ public class UserService {
 
     public Flux<User> generateSampleUser() {
         return Flux.interval(Duration.ofMillis(10))
-                .map(i -> new User("user" + i))
-                .doOnNext(System.out::println);
+                .map(i -> new User("user" + i));
     }
 }
