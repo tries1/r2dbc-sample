@@ -30,7 +30,7 @@ public class UserViewController {
     public String index2(Model model) {
         //IReactiveDataDriverContextVariable userDataDrivenMode = new ReactiveDataDriverContextVariable(userService.findAll().delayElements(Duration.ofSeconds(1)), 1);
 
-        model.addAttribute("users", userService.findAll().delayElements(Duration.ofMillis(10)));
+        model.addAttribute("users", userService.findAll());
 
         return "index2";
     }

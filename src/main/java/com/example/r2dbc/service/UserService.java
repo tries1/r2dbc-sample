@@ -49,10 +49,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Mono<User> deleteUser(Long id) {
+    public Mono<Void> deleteUser(Long id) {
         log.info("{}", id);
-        return userRepository.findById(id)
-                .doOnNext(user -> userRepository.delete(user));
+        return userRepository.deleteById(id);
     }
 
     public Flux<User> generateSampleUser() {

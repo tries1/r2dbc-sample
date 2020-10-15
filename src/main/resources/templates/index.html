@@ -25,12 +25,20 @@
         data: JSON.stringify(param)
       })
       .done(function(result){
-        console.log(result);
+        window.location.reload();
       });
     }
 
-    function deleteUser() {
-
+    function deleteUser(id) {
+      $.ajax({
+        type: 'DELETE',
+        url: '/users/' + id,
+        dataType: 'json',
+        contentType:"application/json"
+      })
+      .done(function(result){
+        window.location.reload();
+      });
     }
   </script>
 </head>
@@ -63,10 +71,10 @@
         </thead>
         <tbody>
         <tr class="result" data-th-each="user : ${users}">
-          <td>[[${user.id}]]</td>
-          <td>[[${user.name}]]</td>
+          <td data-th-text="${user.id}"></td>
+          <td data-th-text="${user.name}"></td>
           <td>
-            <button type="button" class="btn btn-outline-danger">삭제</button>
+            <button type="button" class="btn btn-outline-danger" data-th-onclick="'deleteUser(' + ${user.id} + ')'">삭제</button>
           </td>
         </tr>
         </tbody>
