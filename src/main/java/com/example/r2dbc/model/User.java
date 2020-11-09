@@ -1,25 +1,25 @@
 package com.example.r2dbc.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@ToString
 @Getter
-@Setter
 @NoArgsConstructor
-@Table("users")
+@AllArgsConstructor
 public class User {
+
     @Id
-    private Long id;
+    Long id;
+    String name;
+    Integer age;
 
-    private String name;
-
-    public User(String name) {
+    @Builder
+    public User(String name, Integer age) {
         this.name = name;
+        this.age = age;
     }
 }

@@ -1,3 +1,5 @@
+import org.springframework.util.StringUtils
+
 plugins {
 	id 'org.springframework.boot' version '2.3.4.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
@@ -19,11 +21,12 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	implementation 'io.r2dbc:r2dbc-h2'
+	//implementation 'com.h2database:h2'
 	implementation 'org.springframework.boot:spring-boot-devtools'
-	implementation 'dev.miku:r2dbc-mysql'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -33,5 +36,13 @@ dependencies {
 }
 
 test {
+	def profile = (StringUtils.isEmpty(System.getProperty("spring.profiles.active"))) ? "h2" : System.getProperty("spring.profiles.active")
+	println("""
+		|==================================
+		|Test profile ${profile}
+		|==================================
+	""".stripMargin())
+
+	systemProperty 'spring.profiles.active', (StringUtils.isEmpty(profile)) ? "h2" : profile
 	useJUnitPlatform()
 }
