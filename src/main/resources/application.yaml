@@ -1,0 +1,8 @@
+spring:
+  profiles: h2
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+webclient.h2-console-port: 8081
