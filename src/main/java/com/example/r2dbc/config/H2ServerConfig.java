@@ -14,8 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 
 //r2dbc에서 접속하고 사용하기위해선 좀더 확인이 필요
 @Slf4j
-//@Configuration
-//@Profile("h2")
+@Configuration
+@Profile("h2")
 public class H2ServerConfig {
     private Server webServer;
 

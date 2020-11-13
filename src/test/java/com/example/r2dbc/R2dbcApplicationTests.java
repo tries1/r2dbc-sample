@@ -19,8 +19,8 @@ class R2dbcApplicationTests {
 	@Autowired
 	private UserRepository userRepository;
 
-	@DisplayName("사용자 테이블 deleteAll 테스트")
     @Test
+	@DisplayName("사용자 테이블 deleteAll 테스트")
     public void whenDeleteAllThen0IsExpected() {
         userRepository.deleteAll()
                 .as(StepVerifier::create)
@@ -28,8 +28,8 @@ class R2dbcApplicationTests {
                 .verifyComplete();
     }
 
-    @DisplayName("사용자 테이블 findAll 테스트")
     @Test
+    @DisplayName("사용자 테이블 findAll 테스트")
     public void whenFindAllThen3AreExpected() {
         userRepository.findAll()
                 .as(StepVerifier::create)
