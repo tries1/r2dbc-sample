@@ -21,7 +21,7 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
     @Override
     public ConnectionFactory connectionFactory() {
         return new H2ConnectionFactory(H2ConnectionConfiguration.builder()
-                .url("mem:testdb")
+                //.url("mem:testdb")
                 .inMemory("testdb")
                 .property(H2ConnectionOption.DB_CLOSE_DELAY, "-1")
                 .username("sa")
