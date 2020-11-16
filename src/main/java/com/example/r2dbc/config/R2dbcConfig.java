@@ -32,8 +32,13 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
     @Profile("h2")
     ConnectionFactoryInitializer h2DbInitializer() {
         ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
+        ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
+        resourceDatabasePopulator.addScript(new ClassPathResource("schema-h2.sql"));
+        resourceDatabasePopulator.addScript(new ClassPathResource("schema-h2-2.sql"));
+
         initializer.setConnectionFactory(connectionFactory());
-        initializer.setDatabasePopulator(new ResourceDatabasePopulator(new ClassPathResource("schema-h2.sql")));
+        initializer.setDatabasePopulator(resourceDatabasePopulator);
+        //initializer.setDatabasePopulator(new ResourceDatabasePopulator(new ClassPathResource("schema-h2-2.sql")));
         return initializer;
     }
 }
