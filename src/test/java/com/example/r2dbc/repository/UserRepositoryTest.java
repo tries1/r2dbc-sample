@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
+
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -42,21 +44,25 @@ class UserRepositoryTest {
     @Test
     @DisplayName("사용자 테이블 추가 테스트")
     public void whenInserThen1AreExpected() {
-        //given
+        // given
         User user = User.builder()
                 .name("test")
                 .age(20)
+                .updatedAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .build();
 
-        //when
+        // when
         userRepository.deleteAll();
         Mono<User> u = userRepository.save(user);
 
-        //then
+        // then
         StepVerifier.create(u)
                 .assertNext(it -> {
                     Assertions.assertEquals(user.getName(), it.getName());
                     Assertions.assertEquals(user.getAge(), it.getAge());
+                    Assertions.assertEquals(user.getCreatedAt(), it.getCreatedAt());
+                    Assertions.assertEquals(user.getUpdatedAt(), it.getUpdatedAt());
                 })
                 .verifyComplete();
     }
