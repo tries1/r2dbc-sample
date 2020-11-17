@@ -25,16 +25,14 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        User user = User.builder()
-                .name("test")
-                .age(20)
-                .updatedAt(LocalDateTime.now())
-                .createdAt(LocalDateTime.now())
-                .build();
+        userService.deleteAll();
 
-        userService.addUser(user);
-        userService.addUser(user);
-        userService.addUser(user);
+        User user1 = User.builder().name("test1").age(10).updatedAt(LocalDateTime.now()).createdAt(LocalDateTime.now()).build();
+        User user2 = User.builder().name("test2").age(20).updatedAt(LocalDateTime.now()).createdAt(LocalDateTime.now()).build();
+        User user3 = User.builder().name("test3").age(30).updatedAt(LocalDateTime.now()).createdAt(LocalDateTime.now()).build();
+
+        userService.addUsers(Flux.just(user1, user2, user3));
+        System.out.println("UserServiceTest setUp : user count : " + userService.findAll().count().block());
     }
 
     @AfterEach
@@ -55,6 +53,7 @@ class UserServiceTest {
 
     @Test
     void findAll() {
+        System.out.println("findAll");
         //when
         Flux<User> users = userService.findAll();
 
@@ -73,7 +72,17 @@ class UserServiceTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        userService.addUser(user);
+        Mono<User> newUser = userService.addUser(user);
+
+        // then
+        StepVerifier.create(newUser)
+                .assertNext(it -> {
+                    Assertions.assertEquals(user.getName(), it.getName());
+                    Assertions.assertEquals(user.getAge(), it.getAge());
+                    Assertions.assertEquals(user.getCreatedAt(), it.getCreatedAt());
+                    Assertions.assertEquals(user.getUpdatedAt(), it.getUpdatedAt());
+                })
+                .verifyComplete();
     }
 
     @Disabled
