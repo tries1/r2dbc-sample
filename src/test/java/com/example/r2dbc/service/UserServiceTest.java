@@ -25,28 +25,24 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        userService.deleteAll();
-
         User user1 = User.builder().name("test1").age(10).updatedAt(LocalDateTime.now()).createdAt(LocalDateTime.now()).build();
         User user2 = User.builder().name("test2").age(20).updatedAt(LocalDateTime.now()).createdAt(LocalDateTime.now()).build();
         User user3 = User.builder().name("test3").age(30).updatedAt(LocalDateTime.now()).createdAt(LocalDateTime.now()).build();
 
-        userService.addUsers(Flux.just(user1, user2, user3));
-        System.out.println("UserServiceTest setUp : user count : " + userService.findAll().count().block());
+        userService.deleteAll()
+        .and(userService.addUsers(Flux.just(user1, user2, user3)))
+        .subscribe();
     }
 
     @AfterEach
     void tearDown() {
-        userService.deleteAll();
+        userService.deleteAll().subscribe();
     }
 
     @Test
     void count() {
-        //when
-        Mono<Long> userCount = userService.count();
-
-        //then
-        userCount.as(StepVerifier::create)
+        // when & then
+        userService.count().as(StepVerifier::create)
                 .assertNext(count -> Assertions.assertEquals(count, 3))
                 .verifyComplete();
     }
@@ -54,11 +50,8 @@ class UserServiceTest {
     @Test
     void findAll() {
         System.out.println("findAll");
-        //when
-        Flux<User> users = userService.findAll();
-
-        //then
-        users.as(StepVerifier::create)
+        // when & then
+        userService.findAll().as(StepVerifier::create)
                 .expectNextCount(3)
                 .verifyComplete();
     }
@@ -72,10 +65,8 @@ class UserServiceTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        Mono<User> newUser = userService.addUser(user);
-
-        // then
-        StepVerifier.create(newUser)
+        // when & then
+        StepVerifier.create(userService.addUser(user))
                 .assertNext(it -> {
                     Assertions.assertEquals(user.getName(), it.getName());
                     Assertions.assertEquals(user.getAge(), it.getAge());
@@ -85,7 +76,6 @@ class UserServiceTest {
                 .verifyComplete();
     }
 
-    @Disabled
     @Test
     void addUsers() {
         //given
@@ -101,11 +91,8 @@ class UserServiceTest {
                 .buffer()
                 .flatMap(it -> Flux.fromIterable(it));
 
-        //when
-        Flux<User> result = userService.addUsers(users);
-
-        //then
-        result.as(StepVerifier::create)
+        // when & then
+        userService.addUsers(users).as(StepVerifier::create)
                 .expectNextCount(10)
                 .verifyComplete();
 

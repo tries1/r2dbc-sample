@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -23,23 +24,18 @@ class UserRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        userRepository.deleteAll();
+        User user1 = User.builder().name("test1").age(10).updatedAt(LocalDateTime.now()).createdAt(LocalDateTime.now()).build();
+        User user2 = User.builder().name("test2").age(20).updatedAt(LocalDateTime.now()).createdAt(LocalDateTime.now()).build();
+        User user3 = User.builder().name("test3").age(30).updatedAt(LocalDateTime.now()).createdAt(LocalDateTime.now()).build();
 
-        User user = User.builder()
-                .name("test")
-                .age(20)
-                .updatedAt(LocalDateTime.now())
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        userRepository.save(user);
-        userRepository.save(user);
-        userRepository.save(user);
+        userRepository.deleteAll()
+        .and(userRepository.saveAll(Flux.just(user1, user2, user3)))
+        .subscribe();
     }
 
     @AfterEach
     void tearDown() {
-        userRepository.deleteAll();
+        userRepository.deleteAll().subscribe();
     }
 
     // @link https://github.com/spring-projects/spring-framework/issues/24226
