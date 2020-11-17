@@ -2,7 +2,9 @@ package com.example.r2dbc.repository;
 
 import com.example.r2dbc.model.User;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +15,35 @@ import java.time.LocalDateTime;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-//@ActiveProfiles("h2")
 @SpringBootTest
 class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
 
-    // @See https://github.com/spring-projects/spring-framework/issues/24226
-    // @See https://dlsrb6342.github.io/2019/07/15/ThreadLocal-vs-InheritableThreadLocal/
+    @BeforeEach
+    void setUp() {
+        userRepository.deleteAll();
+
+        User user = User.builder()
+                .name("test")
+                .age(20)
+                .updatedAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        userRepository.save(user);
+        userRepository.save(user);
+        userRepository.save(user);
+    }
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
+    }
+
+    // @link https://github.com/spring-projects/spring-framework/issues/24226
+    // @link https://dlsrb6342.github.io/2019/07/15/ThreadLocal-vs-InheritableThreadLocal/
     //@Transactional
     @Test
     @DisplayName("사용자 테이블 deleteAll 테스트")
