@@ -15,9 +15,9 @@ import io.r2dbc.h2.H2ConnectionOption;
 import io.r2dbc.spi.ConnectionFactory;
 
 @Profile("h2")
-@Configuration
 @EnableR2dbcRepositories
-public class R2dbcConfig extends AbstractR2dbcConfiguration {
+@Configuration
+public class H2R2dbcConfig extends AbstractR2dbcConfiguration {
 
     @Override
     public ConnectionFactory connectionFactory() {
@@ -30,7 +30,7 @@ public class R2dbcConfig extends AbstractR2dbcConfiguration {
     }
 
     @Bean
-    ConnectionFactoryInitializer h2DbInitializer() {
+    public ConnectionFactoryInitializer h2DbInitializer() {
         ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
         ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
         resourceDatabasePopulator.addScript(new ClassPathResource("schema-users-h2.sql"));
