@@ -5,9 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration;
-import org.springframework.data.r2dbc.connectionfactory.init.ConnectionFactoryInitializer;
-import org.springframework.data.r2dbc.connectionfactory.init.ResourceDatabasePopulator;
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
+import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
+import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
 
 import io.r2dbc.h2.H2ConnectionConfiguration;
 import io.r2dbc.h2.H2ConnectionFactory;
@@ -23,8 +23,8 @@ public class H2R2dbcConfig extends AbstractR2dbcConfiguration {
     public ConnectionFactory connectionFactory() {
         return new H2ConnectionFactory(H2ConnectionConfiguration.builder()
                 //.url("mem:testdb")
-                .inMemory("testdb")
-                .property(H2ConnectionOption.DB_CLOSE_DELAY, "-1")
+                .inMemory("testdb") // 데이터베이스 이름
+                .property(H2ConnectionOption.DB_CLOSE_DELAY, "-1")//DB연결이 닫혀도 유지되도록 설정
                 .username("sa")
                 .build());
     }
