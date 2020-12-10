@@ -1,6 +1,8 @@
 package com.example.r2dbc.model;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
@@ -21,7 +23,11 @@ public class User {
     private String name;
     private Integer age;
     private String profilePictureUrl;
+
+    @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @CreatedDate
     private LocalDateTime createdAt;
 
     @Builder
