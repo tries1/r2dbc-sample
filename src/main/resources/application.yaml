@@ -1,15 +1,8 @@
 spring:
-  profiles: local
+  profiles: h2
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 
----
-
-spring:
-  profiles: mysql-db
-  r2dbc:
-    url: r2dbc:mysql://localhost:3306/testdb?useUnicode=true&characterEncoding=utf8
-    username: glenn
-    password: glenn1234
-
-spring.thymeleaf.reactive.max-chunk-size: 8192
-
-logging.level.org.springframework.data.r2dbc: DEBUG
+webclient.h2-console-port: 8081

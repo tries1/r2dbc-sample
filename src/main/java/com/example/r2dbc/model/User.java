@@ -1,25 +1,41 @@
 package com.example.r2dbc.model;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.LocalDateTime;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@ToString
 @Getter
-@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table("users")
 public class User {
+
     @Id
     private Long id;
-
     private String name;
+    private Integer age;
+    private String profilePictureUrl;
 
-    public User(String name) {
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @Builder
+    public User(String name, Integer age, String profilePictureUrl, LocalDateTime updatedAt, LocalDateTime createdAt) {
         this.name = name;
+        this.age = age;
+        this.profilePictureUrl = profilePictureUrl;
+        this.updatedAt = updatedAt;
+        this.createdAt = createdAt;
     }
 }
