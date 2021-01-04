@@ -33,8 +33,9 @@ public class UserApiController {
     }
 
     @DeleteMapping(value = "users/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<Void> deleteUser(@PathVariable Long id) {
-        return userService.deleteUser(id);
+    public Mono<Long> deleteUser(@PathVariable Long id) {
+        return userService.deleteUser(id)
+                .thenReturn(id);
     }
 
 }
