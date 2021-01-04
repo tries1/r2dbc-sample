@@ -22,7 +22,7 @@ public class UserViewController {
     @GetMapping("/")
     public String index(Model model) {
         Flux<User> users = userService.findAll().delayElements(Duration.ofSeconds(1));
-        IReactiveDataDriverContextVariable userDataDrivenMode = new ReactiveDataDriverContextVariable(users);
+        IReactiveDataDriverContextVariable userDataDrivenMode = new ReactiveDataDriverContextVariable(users, 1);
 
         model.addAttribute("users", userDataDrivenMode);
 
